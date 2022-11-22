@@ -118,13 +118,11 @@ pure-eval==0.2.2
 pyarrow==10.0.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
-PyAudio==0.2.12
 pycparser==2.21
 pydantic==1.10.2
 pydeck==0.8.0
 Pygments==2.13.0
 Pympler==1.0.1
-pyopenjtalk==0.3.0
 pyparsing==3.0.9
 pypinyin==0.44.0
 pyrsistent==0.19.2
@@ -173,10 +171,6 @@ tokenizers==0.12.1
 toml==0.10.2
 tomli==2.0.1
 toolz==0.12.0
-torch==1.14.0.dev20221105+cu117
-torch-complex==0.4.3
-torchaudio==0.14.0.dev20221105+cu117
-torchvision==0.15.0.dev20221105+cu117
 tornado==6.2
 tqdm==4.64.1
 traitlets==5.5.0

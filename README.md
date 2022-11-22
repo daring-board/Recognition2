@@ -1,5 +1,14 @@
 # Recognition2
 
+## Requirements
+Pytorch >= 1.10.0
+
+### Midleware
+```
+sudo apt-get install libsndfile1
+sudo apt-get install ffmpeg
+```
+
 ## Preinstall
 ```
 sudo apt install cmake 

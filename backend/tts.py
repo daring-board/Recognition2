@@ -35,5 +35,5 @@ class TTS:
         return speech.cpu().numpy(), text2speech.fs
 
 if __name__=="__main__":
-    tts = TTS('espnet/kan-bayashi_jsut_full_band_vits_prosody')
-    tts.speech("こんちゎぁす", "out.wav")
+    tts = TTS('kan-bayashi/ljspeech_vits')
+    tts.speech("Likewise. I hope you have a great day. I'm about to head to work.", "out.wav")
