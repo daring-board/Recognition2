@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 from blenderbot import Chatbot
 from tts import TTS
-import stt
+from stt import STT
 
 app = FastAPI()
 origins = [
@@ -27,6 +27,7 @@ app.add_middleware(
 
 chatbot = Chatbot()
 tts = TTS('kan-bayashi/ljspeech_vits')
+stt = STT(size='small')
 
 # リクエストbodyを定義
 class User(BaseModel):
@@ -62,7 +63,11 @@ def user_response(file: UploadFile=File(...)):
         out_file = 'bot.wav'
         audio_file_path = f'./tts_out/{out_file}'
         tts.speech(out_text, output_path=audio_file_path)
-        return {'response_url': '/download/response'}
+        return {
+            'response_url': '/download/response',
+            'user_uttence': raw_text,
+            'bot_response': out_text
+        }
 
     return {"Error": "アップロードファイルが見つかりません。"}
 
