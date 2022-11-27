@@ -1,5 +1,6 @@
 import os
 import shutil
+import datetime
 
 import uvicorn
 from fastapi import FastAPI
@@ -60,19 +61,20 @@ def user_response(file: UploadFile=File(...)):
         print("bot->", out_text)
         print("--------------------------------")
 
-        out_file = 'bot.wav'
+        now = datetime.datetime.now()
+        ts = datetime.datetime.timestamp(now)
+        out_file = f'bot_{ts}.wav'
         audio_file_path = f'./tts_out/{out_file}'
         tts.speech(out_text, output_path=audio_file_path)
         return {
-            'response_url': '/download/response',
+            'response_url': f'/download/response/{out_file}',
             'user_uttence': raw_text,
             'bot_response': out_text
         }
 
     return {"Error": "アップロードファイルが見つかりません。"}
 
-@app.get('/download/response')
-def download():
-    out_file = 'bot.wav'
+@app.get('/download/response/{out_file}')
+def download(out_file):
     audio_file_path = f'./tts_out/{out_file}'
     return FileResponse(audio_file_path, filename=out_file, media_type="application/octet-stream")
