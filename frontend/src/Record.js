@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import ReactAudioPlayer from "react-audio-player";
+import './Record.css';
 
 const Record = () => {
     const [file, setFile] = React.useState([]);
@@ -8,6 +9,7 @@ const Record = () => {
     const audioRef = React.useRef();
     let [url, setURL] = React.useState(null);
     let [output_url, setOutputURL] = React.useState(null);
+    let [texts, setTexts] = React.useState([]);
 
     React.useEffect(() => {
         // マイクへのアクセス権を取得
@@ -80,19 +82,23 @@ const Record = () => {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        }).then(res => {
+        }).then(async res => {
             console.log('success')
-            console.log(res)
+            console.log(res.data)
   
-            output_url = 'http://127.0.0.1:8000' + res['response_url']
+            output_url = 'http://127.0.0.1:8000' + res.data.response_url
             setOutputURL(output_url)
             console.log('OUTPUT Data')
             console.log(output_url)
-  
-            const user_uttence = document.querySelector('#user_uttence')
-            const bot_response = document.querySelector('#bot_response')
-            user_uttence.textContent = res['user_uttence']
-            bot_response.textContent = res['bot_response']
+
+            let tmp = []
+            await texts.forEach(element => {
+              tmp.push(element)
+            });
+            tmp.push(res.data.user_uttence + ': user');
+            tmp.push('AI: ' + res.data.bot_response);
+            setTexts(tmp)
+            console.log(tmp)
         }).catch(error => {
             new Error(error)
         })
@@ -111,13 +117,22 @@ const Record = () => {
             <div>
                 <ReactAudioPlayer src={url} controls />
             </div>
-            <p id="user_uttence"></p>
 
             <h2>Output audio</h2>
             <div>
                 <ReactAudioPlayer src={output_url} controls />
             </div>
-            <p id="bot_response"></p>
+
+            <h2>TextContents</h2>
+            <div className="chat-area">
+              {texts.map((text, index) => {
+                if(index % 2 === 1) {
+                  return <div key={index} className='text-left'>{text}</div>
+                }else{
+                  return <div key={index} className='text-right'>{text}</div>
+                }
+              })}
+            </div>
         </div>
     )
 }

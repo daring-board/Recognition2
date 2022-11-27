@@ -1,0 +1,14 @@
+.text-left {
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.text-right {
+  white-space: pre-wrap;
+  text-align: right;
+}
+
+.chat-area {
+  width: 60%;
+  margin: 0 auto;
+}
