@@ -19,9 +19,13 @@ sudo apt install cmake
 python3 -m venv venv
 . venv/bin/activate
 pip install --pre torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/nightly/cu117
+git clone https://github.com/Winfredy/SadTalker.git
+cd SadTalker 
+pip install -r requirements.txt
+bash scripts/download_models.sh
 ```
 
 ## Start Backend server
 ```
-uvicorn webapp:app
+uvicorn webapp:app --reload
 ```
