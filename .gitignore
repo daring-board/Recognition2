@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 node_module/
+backend/stt_in/user*
+backend/tts_out/bot*
+backend/movies/*/

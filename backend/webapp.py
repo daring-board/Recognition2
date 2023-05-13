@@ -98,14 +98,23 @@ def user_response(body: HistoryMessage):
         use_enhancer=False,
         result_dir=movies_path
     )
+    video_basename = os.path.basename(output_path).replace('image##', '')
+    video_file_path = f'./movies/{video_basename}'
+    shutil.copyfile(output_path, video_file_path)
 
     return {
         'response_url': f'/download/response/{out_file}',
         'user_uttence': raw_text,
-        'bot_response': out_text
+        'bot_response': out_text,
+        'video_url': f'/download/movie/{video_basename}'
     }
 
 @app.get('/download/response/{out_file}')
 def download(out_file):
     audio_file_path = f'./tts_out/{out_file}'
     return FileResponse(audio_file_path, filename=out_file, media_type="application/octet-stream")
+
+@app.get('/download/movie/{out_file}')
+def download_video(out_file):
+    video_file_path = f'./movies/{out_file}'
+    return FileResponse(video_file_path, filename=out_file, media_type="video/mp4")
