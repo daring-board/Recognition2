@@ -1,6 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import ReactAudioPlayer from "react-audio-player";
+import ReactPlayer from 'react-player'
 import './Record.css';
 
 const Record = () => {
@@ -9,6 +10,7 @@ const Record = () => {
     const audioRef = React.useRef();
     let [url, setURL] = React.useState(null);
     let [output_url, setOutputURL] = React.useState(null);
+    let [video_url, setVideoURL] = React.useState(null);
     let [texts, setTexts] = React.useState([]);
 
     React.useEffect(() => {
@@ -78,27 +80,43 @@ const Record = () => {
         setAudioState(true);
         setFile([]);
   
-        axios.post('http://127.0.0.1:8000/user/response', formData, {
+        axios.post('http://127.0.0.1:8000/upload/sound', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         }).then(async res => {
             console.log('success')
             console.log(res.data)
-  
-            output_url = 'http://127.0.0.1:8000' + res.data.response_url
-            setOutputURL(output_url)
-            console.log('OUTPUT Data')
-            console.log(output_url)
+            let body = {
+              'user_wav_path': res.data.filename, 'history': texts
+            }
 
-            let tmp = []
-            await texts.forEach(element => {
-              tmp.push(element)
+            await axios.post('http://127.0.0.1:8000/user/response', body, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(async res => {
+              output_url = 'http://127.0.0.1:8000' + res.data.response_url
+              setOutputURL(output_url)
+              console.log('OUTPUT Data')
+              console.log(output_url)
+  
+              video_url = 'http://127.0.0.1:8000' + res.data.video_url
+              setVideoURL(video_url)
+              console.log('Video Data')
+              console.log(video_url)
+
+              let tmp = []
+              await texts.forEach(element => {
+                tmp.push(element)
+              });
+              tmp.push(res.data.user_uttence + ': user');
+              tmp.push('AI: ' + res.data.bot_response);
+              setTexts(tmp)
+              console.log(tmp)
+            }).catch(error =>{
+              new Error(error)
             });
-            tmp.push(res.data.user_uttence + ': user');
-            tmp.push('AI: ' + res.data.bot_response);
-            setTexts(tmp)
-            console.log(tmp)
         }).catch(error => {
             new Error(error)
         })
@@ -121,6 +139,9 @@ const Record = () => {
             <h2>Output audio</h2>
             <div>
                 <ReactAudioPlayer src={output_url} controls />
+            </div>
+            <div>
+              <ReactPlayer url={video_url} controls width="100%"/>
             </div>
 
             <h2>TextContents</h2>
